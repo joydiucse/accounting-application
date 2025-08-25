@@ -104,6 +104,9 @@ class DashboardController extends Controller
         
         // Monthly breakdown for charts
         $monthlyData = [];
+        $chartLabels = [];
+        $incomeData = [];
+        $expenseData = [];
         $period = Carbon::parse($dateFrom);
         $endPeriod = Carbon::parse($dateTo);
         
@@ -121,8 +124,17 @@ class DashboardController extends Controller
                 'profit' => $monthlyIncome - $monthlyExpenses
             ];
             
+            // Prepare chart data
+            $chartLabels[] = $period->format('M Y');
+            $incomeData[] = $monthlyIncome;
+            $expenseData[] = $monthlyExpenses;
+            
             $period->addMonth();
         }
+        
+        // Prepare category chart data
+        $categoryLabels = $incomeByCategory->keys()->toArray();
+        $categoryData = $incomeByCategory->pluck('total')->toArray();
         
         return view('reports.index', compact(
             'incomes',
@@ -134,7 +146,12 @@ class DashboardController extends Controller
             'expenseByCategory',
             'monthlyData',
             'dateFrom',
-            'dateTo'
+            'dateTo',
+            'chartLabels',
+            'incomeData',
+            'expenseData',
+            'categoryLabels',
+            'categoryData'
         ));
     }
     

@@ -129,11 +129,11 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse($incomeByCategory as $item)
+                                @forelse($incomeByCategory as $categoryName => $data)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->category_name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">৳{{ number_format($item->total_amount, 2) }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->count }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $categoryName }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">৳{{ number_format($data['total'], 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data['count'] }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -160,11 +160,11 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @forelse($expensesByCategory as $item)
+                                @forelse($expenseByCategory as $categoryName => $data)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->category_name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">৳{{ number_format($item->total_amount, 2) }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->count }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $categoryName }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">৳{{ number_format($data['total'], 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $data['count'] }}</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -213,7 +213,7 @@
                         beginAtZero: true,
                         ticks: {
                             callback: function(value) {
-                                return '$' + value.toLocaleString();
+                                return '৳' + value.toLocaleString();
                             }
                         }
                     }
