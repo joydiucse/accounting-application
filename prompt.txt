@@ -1,0 +1,59 @@
+I want you to build me a **Laravel application** for managing company accounting and finance.  
+Use **Blade templates with Tailwind CSS** for styling.  
+Use **jQuery only if JavaScript is absolutely necessary**.  
+Keep the code clean, modular, and optimized for **low server cost**.  
+
+### Features:
+1. **Authentication & User Management**
+   - Simple login/register with Laravel Breeze (Blade version).
+   - Users can have roles: Admin, Accountant, Viewer.
+
+2. **Dashboard**
+   - Show total income, total expenses, and current balance.
+   - Show recent transactions.
+   - Show charts (use Chart.js or ApexCharts) for monthly income vs expenses.
+
+3. **Expense Management**
+   - CRUD for daily expenses (date, category, amount, description).
+   - Categories: Office, Salary, Rent, Utility, Others.
+   - Blade form with validation & error messages.
+   - Paginated & searchable expense list.
+
+4. **Income Management**
+   - CRUD for daily income (date, source, amount, description).
+   - Income sources: Sales, Investments, Services, Others.
+   - Paginated & searchable income list.
+
+5. **Reporting**
+   - Income report by date range.
+   - Expense report by date range.
+   - Profit & loss statement.
+   - Export reports to **PDF & Excel**.
+
+6. **Settings**
+   - Manage categories (for both income & expenses).
+   - Company profile (name, address, logo).
+
+### Technical Requirements:
+- Use **Laravel** with **Blade templates**.
+- Styling with **Tailwind CSS** (clean, simple, responsive).
+- Use **Eloquent ORM** for database operations.
+- Use **Migrations & Seeders** to create tables.
+- Use **Laravel Excel** for exporting reports.
+- Use **laravel-dompdf** for PDF export.
+- Use **Chart.js** for charts in dashboard & reports.
+- Optimize queries with eager loading where needed.
+- Use **resource controllers** and **form requests** for validation.
+- Keep code structured: Models, Controllers, Views (Blade), Routes.
+- No heavy frontend frameworks (no React/Vue).
+
+### Database Schema (suggested):
+- users (id, name, email, password, role)
+- incomes (id, date, source, amount, description, user_id)
+- expenses (id, date, category, amount, description, user_id)
+- categories (id, name, type [income/expense])
+- company_profile (id, name, address, logo)
+
+### Goal:
+A **lightweight but functional accounting and finance system** that runs smoothly on a **low-cost VPS (1GB RAM)**.  
+Make the UI clean and professional with **Tailwind CSS**.  
