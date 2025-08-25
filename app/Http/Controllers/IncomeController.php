@@ -45,13 +45,13 @@ class IncomeController extends Controller
         
         return view('incomes.index', compact('incomes', 'categories', 'totalIncome'));
     }
-    
+
     public function create()
     {
         $categories = Category::income()->get();
         return view('incomes.create', compact('categories'));
     }
-    
+
     public function store(IncomeRequest $request)
     {
         Income::create([
@@ -62,23 +62,23 @@ class IncomeController extends Controller
             'category_id' => $request->category_id,
             'user_id' => auth()->id(),
         ]);
-        
+
         return redirect()->route('incomes.index')
             ->with('success', 'Income created successfully.');
     }
-    
+
     public function show(Income $income)
     {
         $income->load(['user', 'category']);
         return view('incomes.show', compact('income'));
     }
-    
+
     public function edit(Income $income)
     {
         $categories = Category::income()->get();
         return view('incomes.edit', compact('income', 'categories'));
     }
-    
+
     public function update(IncomeRequest $request, Income $income)
     {
         $income->update([
@@ -88,15 +88,15 @@ class IncomeController extends Controller
             'description' => $request->description,
             'category_id' => $request->category_id,
         ]);
-        
+
         return redirect()->route('incomes.index')
             ->with('success', 'Income updated successfully.');
     }
-    
+
     public function destroy(Income $income)
     {
         $income->delete();
-        
+
         return redirect()->route('incomes.index')
             ->with('success', 'Income deleted successfully.');
     }
