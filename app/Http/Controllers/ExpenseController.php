@@ -37,10 +37,13 @@ class ExpenseController extends Controller
             $query->where('date', '<=', $request->date_to);
         }
         
+        // Calculate total expenses for the filtered results
+        $totalExpenses = $query->sum('amount');
+        
         $expenses = $query->latest('date')->paginate(15);
         $categories = Category::expense()->get();
         
-        return view('expenses.index', compact('expenses', 'categories'));
+        return view('expenses.index', compact('expenses', 'categories', 'totalExpenses'));
     }
     
     public function create()
