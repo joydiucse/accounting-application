@@ -116,7 +116,7 @@
                 <!-- Total Summary -->
                 <div class="mt-4 bg-gray-50 p-4 rounded-lg">
                     <div class="text-sm text-gray-600">
-                        Total Expenses: <span class="font-semibold text-red-600">${{ number_format($totalExpenses, 2) }}</span>
+                        Total Expenses: <span class="font-semibold text-red-600">৳{{ number_format($totalExpenses, 2) }}</span>
                         ({{ $expenses->total() }} records)
                     </div>
                 </div>

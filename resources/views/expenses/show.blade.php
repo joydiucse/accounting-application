@@ -28,7 +28,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Amount</label>
-                        <p class="mt-1 text-lg font-semibold text-red-600">${{ number_format($expense->amount, 2) }}</p>
+                        <p class="mt-1 text-lg font-semibold text-red-600">৳{{ number_format($expense->amount, 2) }}</p>
                     </div>
 
                     <div class="md:col-span-2">

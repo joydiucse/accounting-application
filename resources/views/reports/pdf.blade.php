@@ -85,15 +85,15 @@
         <div class="summary-grid">
             <div class="summary-card">
                 <h3>Total Income</h3>
-                <div class="amount income">${{ number_format($totalIncome, 2) }}</div>
+                <div class="amount income">৳{{ number_format($totalIncome, 2) }}</div>
             </div>
             <div class="summary-card">
                 <h3>Total Expenses</h3>
-                <div class="amount expense">${{ number_format($totalExpenses, 2) }}</div>
+                <div class="amount expense">৳{{ number_format($totalExpenses, 2) }}</div>
             </div>
             <div class="summary-card">
                 <h3>Net Profit/Loss</h3>
-                <div class="amount profit">${{ number_format($netProfit, 2) }}</div>
+                <div class="amount profit">৳{{ number_format($netProfit, 2) }}</div>
             </div>
         </div>
     </div>
@@ -114,7 +114,7 @@
                 <tr>
                     <td>{{ $category }}</td>
                     <td>{{ $data['count'] }}</td>
-                    <td class="text-right">${{ number_format($data['total'], 2) }}</td>
+                    <td class="text-right">৳{{ number_format($data['total'], 2) }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -138,7 +138,7 @@
                 <tr>
                     <td>{{ $category }}</td>
                     <td>{{ $data['count'] }}</td>
-                    <td class="text-right">${{ number_format($data['total'], 2) }}</td>
+                    <td class="text-right">৳{{ number_format($data['total'], 2) }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -165,7 +165,7 @@
                     <td>{{ $income->date->format('Y-m-d') }}</td>
                     <td>{{ $income->source }}</td>
                     <td>{{ $income->category->name ?? 'N/A' }}</td>
-                    <td class="text-right">${{ number_format($income->amount, 2) }}</td>
+                    <td class="text-right">৳{{ number_format($income->amount, 2) }}</td>
                     <td>{{ $income->description }}</td>
                 </tr>
                 @endforeach
@@ -191,7 +191,7 @@
                 <tr>
                     <td>{{ $expense->date->format('Y-m-d') }}</td>
                     <td>{{ $expense->category->name ?? 'N/A' }}</td>
-                    <td class="text-right">${{ number_format($expense->amount, 2) }}</td>
+                    <td class="text-right">৳{{ number_format($expense->amount, 2) }}</td>
                     <td>{{ $expense->description }}</td>
                 </tr>
                 @endforeach

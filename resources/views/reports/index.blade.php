@@ -51,7 +51,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500">Total Income</p>
-                            <p class="text-2xl font-semibold text-green-600">${{ number_format($totalIncome, 2) }}</p>
+                            <p class="text-2xl font-semibold text-green-600">৳{{ number_format($totalIncome, 2) }}</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500">Total Expenses</p>
-                            <p class="text-2xl font-semibold text-red-600">${{ number_format($totalExpenses, 2) }}</p>
+                            <p class="text-2xl font-semibold text-red-600">৳{{ number_format($totalExpenses, 2) }}</p>
                         </div>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
                                 @forelse($incomeByCategory as $item)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->category_name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">${{ number_format($item->total_amount, 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">৳{{ number_format($item->total_amount, 2) }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->count }}</td>
                                     </tr>
                                 @empty
@@ -163,7 +163,7 @@
                                 @forelse($expensesByCategory as $item)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $item->category_name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">${{ number_format($item->total_amount, 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">৳{{ number_format($item->total_amount, 2) }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->count }}</td>
                                     </tr>
                                 @empty

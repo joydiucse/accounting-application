@@ -26,7 +26,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-slate-600 mb-1">Total Outstanding</p>
-                        <p class="text-3xl font-bold text-slate-900">${{ number_format($totalIncome, 2) }}</p>
+                        <p class="text-3xl font-bold text-slate-900">৳{{ number_format($totalIncome, 2) }}</p>
                         <div class="flex items-center mt-2">
                             <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">+25%</span>
                             <span class="text-xs text-slate-500 ml-2">vs last month</span>
@@ -45,7 +45,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-slate-600 mb-1">Total Expenses</p>
-                        <p class="text-3xl font-bold text-slate-900">${{ number_format($totalExpenses, 2) }}</p>
+                        <p class="text-3xl font-bold text-slate-900">৳{{ number_format($totalExpenses, 2) }}</p>
                         <div class="flex items-center mt-2">
                             <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full font-medium">+12%</span>
                             <span class="text-xs text-slate-500 ml-2">vs last month</span>
@@ -65,7 +65,7 @@
                     <div>
                         <p class="text-sm font-medium text-slate-600 mb-1">Net Profit</p>
                         <p class="text-3xl font-bold {{ $currentBalance >= 0 ? 'text-green-600' : 'text-red-600' }}">
-                            ${{ number_format($currentBalance, 2) }}
+                            ৳{{ number_format($currentBalance, 2) }}
                         </p>
                         <div class="flex items-center mt-2">
                             <span class="text-xs {{ $currentBalance >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }} px-2 py-1 rounded-full font-medium">
@@ -87,7 +87,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-medium text-slate-600 mb-1">This Month</p>
-                        <p class="text-3xl font-bold text-slate-900">${{ number_format(abs($monthlyProfit ?? 0), 2) }}</p>
+                        <p class="text-3xl font-bold text-slate-900">৳{{ number_format(abs($monthlyProfit ?? 0), 2) }}</p>
                         <div class="flex items-center mt-2">
                             <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">+15%</span>
                             <span class="text-xs text-slate-500 ml-2">vs last month</span>
@@ -136,15 +136,15 @@
                     <div class="grid grid-cols-3 gap-4 text-center">
                         <div>
                             <p class="text-xs text-slate-600 mb-1">Payment</p>
-                            <p class="text-lg font-bold text-slate-900">${{ number_format($totalIncome * 0.6, 2) }}</p>
+                            <p class="text-lg font-bold text-slate-900">৳{{ number_format($totalIncome * 0.6, 2) }}</p>
                         </div>
                         <div>
                             <p class="text-xs text-slate-600 mb-1">Pending</p>
-                            <p class="text-lg font-bold text-slate-900">${{ number_format($totalIncome * 0.25, 2) }}</p>
+                            <p class="text-lg font-bold text-slate-900">৳{{ number_format($totalIncome * 0.25, 2) }}</p>
                         </div>
                         <div>
                             <p class="text-xs text-slate-600 mb-1">Paid</p>
-                            <p class="text-lg font-bold text-slate-900">${{ number_format($totalIncome * 0.15, 2) }}</p>
+                            <p class="text-lg font-bold text-slate-900">৳{{ number_format($totalIncome * 0.15, 2) }}</p>
                         </div>
                     </div>
 
@@ -159,7 +159,7 @@
                             <p class="text-sm text-slate-600">March 1, 2024</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-2xl font-bold text-slate-900">${{ number_format($totalExpenses * 0.8, 2) }}</p>
+                            <p class="text-2xl font-bold text-slate-900">৳{{ number_format($totalExpenses * 0.8, 2) }}</p>
                             <div class="flex items-center justify-center mt-1">
                                 <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">✓ PAID</span>
                             </div>
@@ -170,7 +170,7 @@
                             <p class="text-sm text-slate-600">March 6, 2024</p>
                         </div>
                         <div class="text-center">
-                            <p class="text-2xl font-bold text-slate-900">${{ number_format($totalExpenses * 0.6, 2) }}</p>
+                            <p class="text-2xl font-bold text-slate-900">৳{{ number_format($totalExpenses * 0.6, 2) }}</p>
                             <div class="flex items-center justify-center mt-1">
                                 <span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-medium">⏳ PENDING</span>
                             </div>
@@ -209,7 +209,7 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="font-bold text-green-600">${{ number_format($income->amount, 2) }}</p>
+                                <p class="font-bold text-green-600">৳{{ number_format($income->amount, 2) }}</p>
                                 <button class="text-xs bg-slate-800 text-white px-3 py-1 rounded-lg mt-1 hover:bg-slate-700 transition-colors duration-200">
                                     Send Invoice
                                 </button>
