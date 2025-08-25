@@ -23,6 +23,11 @@ class ExpenseController extends Controller
             });
         }
         
+        // Category filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        
         // Date range filter
         if ($request->filled('date_from')) {
             $query->where('date', '>=', $request->date_from);
@@ -33,8 +38,9 @@ class ExpenseController extends Controller
         }
         
         $expenses = $query->latest('date')->paginate(15);
+        $categories = Category::expense()->get();
         
-        return view('expenses.index', compact('expenses'));
+        return view('expenses.index', compact('expenses', 'categories'));
     }
     
     public function create()

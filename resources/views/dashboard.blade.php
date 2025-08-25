@@ -127,12 +127,12 @@
                     <h3 class="text-lg font-bold text-slate-900">Payroll Summary</h3>
                     <a href="{{ route('reports.index') }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">View report</a>
                 </div>
-                
+
                 <div class="space-y-6">
                     <div class="text-center">
                         <p class="text-sm text-slate-600 mb-1">From 1-31 March 2024</p>
                     </div>
-                    
+
                     <div class="grid grid-cols-3 gap-4 text-center">
                         <div>
                             <p class="text-xs text-slate-600 mb-1">Payment</p>
@@ -147,12 +147,12 @@
                             <p class="text-lg font-bold text-slate-900">${{ number_format($totalIncome * 0.15, 2) }}</p>
                         </div>
                     </div>
-                    
+
                     <!-- Donut Chart -->
                     <div class="flex justify-center">
                         <canvas id="categoryChart" width="200" height="200"></canvas>
                     </div>
-                    
+
                     <div class="space-y-3">
                         <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
                             <p class="text-sm font-medium text-slate-700">Previous Payroll</p>
@@ -164,7 +164,7 @@
                                 <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">✓ PAID</span>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
                             <p class="text-sm font-medium text-slate-700">Upcoming Payroll</p>
                             <p class="text-sm text-slate-600">March 6, 2024</p>
@@ -191,7 +191,7 @@
                     <a href="{{ route('reports.index') }}" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">See All</a>
                 </div>
             </div>
-            
+
             <div class="p-6">
                 <div class="space-y-4">
                     @forelse($recentIncomes->take(3) as $income)
@@ -229,7 +229,7 @@
     <script>
         // Monthly Income vs Expenses Chart with enhanced styling
         const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-        new Chart(monthlyCtx, {
+        /*new Chart(monthlyCtx, {
             type: 'line',
             data: {
                 labels: {!! json_encode($monthlyLabels ?? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']) !!},
@@ -335,6 +335,6 @@
                     }
                 }
             }
-        });
+        });*/
     </script>
 </x-app-layout>
