@@ -23,6 +23,11 @@ class IncomeController extends Controller
             });
         }
         
+        // Category filter
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        
         // Date range filter
         if ($request->filled('date_from')) {
             $query->where('date', '>=', $request->date_from);
@@ -32,9 +37,13 @@ class IncomeController extends Controller
             $query->where('date', '<=', $request->date_to);
         }
         
-        $incomes = $query->latest('date')->paginate(15);
+        // Calculate total income for the filtered results
+        $totalIncome = $query->sum('amount');
         
-        return view('incomes.index', compact('incomes'));
+        $incomes = $query->latest('date')->paginate(15);
+        $categories = Category::income()->get();
+        
+        return view('incomes.index', compact('incomes', 'categories', 'totalIncome'));
     }
     
     public function create()
