@@ -16,29 +16,23 @@ class DatabaseSeeder extends Seeder
     {
         // Create admin user
         User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
+            'name' => 'Moshahed Alam',
+            'email' => 'moshahed777@gmail.com',
             'role' => 'admin',
-            'password' => Hash::make('Developer#1'),
+            'password' => Hash::make('Moshahed##2025'),
+        ]);
+        User::factory()->create([
+            'name' => 'Joynal Abedin',
+            'email' => 'joy.diu.cse@gmail.com',
+            'role' => 'admin',
+            'password' => Hash::make('Joy##2025'),
         ]);
 
-        // Create accountant user
-        User::factory()->create([
-            'name' => 'Accountant User',
-            'email' => 'accountant@example.com',
-            'role' => 'accountant',
-        ]);
 
-        // Create viewer user
-        User::factory()->create([
-            'name' => 'Viewer User',
-            'email' => 'viewer@example.com',
-            'role' => 'viewer',
-        ]);
 
         // Create company profile
         CompanyProfile::create([
-            'name' => 'Your Company Name',
+            'name' => 'Insite Service',
             'address' => 'Your Company Address',
             'phone' => '+1234567890',
             'email' => 'info@yourcompany.com',
