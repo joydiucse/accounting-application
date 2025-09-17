@@ -13,13 +13,23 @@ class ExpenseRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'date' => 'required|date|before_or_equal:today',
             'category' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0.01|max:999999999.99',
             'description' => 'nullable|string|max:1000',
             'category_id' => 'nullable|exists:categories,id',
+            'from_dollar' => 'boolean',
         ];
+
+        // Add dollar field validation when from_dollar is true
+        if ($this->boolean('from_dollar')) {
+            $rules['usd_amount'] = 'required|numeric|min:0.01|max:999999999.99';
+            $rules['exchange_rate'] = 'required|numeric|min:0.01|max:999.99';
+            $rules['bdt_amount'] = 'required|numeric|min:0.01|max:999999999.99';
+        }
+
+        return $rules;
     }
 
     public function messages(): array

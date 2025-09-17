@@ -8,6 +8,7 @@ use App\Http\Controllers\DollarIncomeController;
 use App\Http\Controllers\DollarExpenseController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyProfileController;
+use App\Http\Controllers\Api\BalanceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -45,6 +46,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/company-profile/edit', [CompanyProfileController::class, 'edit'])->name('company-profile.edit');
         Route::patch('/company-profile', [CompanyProfileController::class, 'update'])->name('company-profile.update');
     });
+    
+    // API routes for AJAX requests
+    Route::get('/api/dollar-balance', [BalanceController::class, 'getDollarBalance'])->name('api.dollar-balance');
     
     // Reporting routes - accessible by all authenticated users
     Route::get('/reports', [DashboardController::class, 'reports'])->name('reports.index');

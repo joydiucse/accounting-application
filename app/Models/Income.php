@@ -16,6 +16,9 @@ class Income extends Model
         'source',
         'amount',
         'from_dollar',
+        'usd_amount',
+        'exchange_rate',
+        'bdt_amount',
         'description',
         'user_id',
         'category_id',
@@ -60,10 +63,28 @@ class Income extends Model
     }
 
     /**
-     * Scope a query to only include incomes from current year.
+     * Scope a query to only include incomes from the current year.
      */
     public function scopeCurrentYear($query)
     {
         return $query->whereYear('date', Carbon::now()->year);
+    }
+
+    /**
+     * Calculate available dollar balance for a user
+     */
+    public static function getAvailableDollarBalance($userId)
+    {
+        // Get total USD income from dollar sources
+        $totalDollarIncome = self::where('user_id', $userId)
+            ->where('from_dollar', true)
+            ->sum('usd_amount');
+
+        // Get total USD expenses from dollar sources
+        $totalDollarExpenses = \App\Models\Expense::where('user_id', $userId)
+            ->where('from_dollar', true)
+            ->sum('usd_amount');
+
+        return $totalDollarIncome - $totalDollarExpenses;
     }
 }

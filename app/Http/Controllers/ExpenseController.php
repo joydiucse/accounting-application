@@ -54,14 +54,45 @@ class ExpenseController extends Controller
 
     public function store(ExpenseRequest $request)
     {
-        Expense::create([
+        $data = [
             'date' => $request->date,
             'category' => $request->category,
             'amount' => $request->amount,
             'description' => $request->description,
             'category_id' => $request->category_id,
             'user_id' => auth()->id(),
-        ]);
+            'from_dollar' => $request->boolean('from_dollar'),
+        ];
+
+        // Handle dollar source expenses
+        if ($request->boolean('from_dollar')) {
+            $usdAmount = $request->usd_amount;
+            $availableBalance = \App\Models\Income::getAvailableDollarBalance(auth()->id());
+            
+            if ($usdAmount > $availableBalance) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['usd_amount' => 'Insufficient dollar balance. Available: $' . number_format($availableBalance, 2)]);
+            }
+            
+            $data['usd_amount'] = $usdAmount;
+            $data['exchange_rate'] = $request->exchange_rate;
+            $data['bdt_amount'] = $request->bdt_amount;
+            
+            // Also create a DollarExpense record
+            \App\Models\DollarExpense::create([
+                'date' => $request->date,
+                'category' => $request->category,
+                'amount' => $usdAmount,
+                'exchange_rate' => $request->exchange_rate,
+                'bdt_amount' => $request->bdt_amount,
+                'description' => $request->description,
+                'category_id' => $request->category_id,
+                'user_id' => auth()->id(),
+            ]);
+        }
+
+        Expense::create($data);
 
         return redirect()->route('expenses.index')
             ->with('success', 'Expense created successfully.');
@@ -81,13 +112,83 @@ class ExpenseController extends Controller
 
     public function update(ExpenseRequest $request, Expense $expense)
     {
-        $expense->update([
+        $data = [
             'date' => $request->date,
             'category' => $request->category,
             'amount' => $request->amount,
             'description' => $request->description,
             'category_id' => $request->category_id,
-        ]);
+            'from_dollar' => $request->boolean('from_dollar'),
+        ];
+
+        // Handle dollar source expenses
+        if ($request->boolean('from_dollar')) {
+            $usdAmount = $request->usd_amount;
+            $availableBalance = \App\Models\Income::getAvailableDollarBalance(auth()->id());
+            
+            // Add back the current expense's USD amount if it was from dollar source
+            if ($expense->from_dollar) {
+                $availableBalance += $expense->usd_amount;
+            }
+            
+            if ($usdAmount > $availableBalance) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['usd_amount' => 'Insufficient dollar balance. Available: $' . number_format($availableBalance, 2)]);
+            }
+            
+            $data['usd_amount'] = $usdAmount;
+            $data['exchange_rate'] = $request->exchange_rate;
+            $data['bdt_amount'] = $request->bdt_amount;
+            
+            // Find or create corresponding DollarExpense record
+            $dollarExpense = \App\Models\DollarExpense::where('user_id', auth()->id())
+                ->where('date', $expense->date)
+                ->where('category', $expense->category)
+                ->where('amount', $expense->usd_amount ?? 0)
+                ->first();
+                
+            if ($dollarExpense) {
+                // Update existing DollarExpense record
+                $dollarExpense->update([
+                    'date' => $request->date,
+                    'category' => $request->category,
+                    'amount' => $usdAmount,
+                    'exchange_rate' => $request->exchange_rate,
+                    'bdt_amount' => $request->bdt_amount,
+                    'description' => $request->description,
+                    'category_id' => $request->category_id,
+                ]);
+            } else {
+                // Create new DollarExpense record
+                \App\Models\DollarExpense::create([
+                    'date' => $request->date,
+                    'category' => $request->category,
+                    'amount' => $usdAmount,
+                    'exchange_rate' => $request->exchange_rate,
+                    'bdt_amount' => $request->bdt_amount,
+                    'description' => $request->description,
+                    'category_id' => $request->category_id,
+                    'user_id' => auth()->id(),
+                ]);
+            }
+        } else {
+            // Clear dollar fields if not from dollar source
+            $data['usd_amount'] = null;
+            $data['exchange_rate'] = null;
+            $data['bdt_amount'] = null;
+            
+            // Remove corresponding DollarExpense record if it exists
+            if ($expense->from_dollar && $expense->usd_amount) {
+                \App\Models\DollarExpense::where('user_id', auth()->id())
+                    ->where('date', $expense->date)
+                    ->where('category', $expense->category)
+                    ->where('amount', $expense->usd_amount)
+                    ->delete();
+            }
+        }
+
+        $expense->update($data);
 
         return redirect()->route('expenses.index')
             ->with('success', 'Expense updated successfully.');
@@ -95,6 +196,15 @@ class ExpenseController extends Controller
 
     public function destroy(Expense $expense)
     {
+        // Delete corresponding DollarExpense record if it exists
+        if ($expense->from_dollar && $expense->usd_amount) {
+            \App\Models\DollarExpense::where('user_id', $expense->user_id)
+                ->where('date', $expense->date)
+                ->where('category', $expense->category)
+                ->where('amount', $expense->usd_amount)
+                ->delete();
+        }
+        
         $expense->delete();
 
         return redirect()->route('expenses.index')

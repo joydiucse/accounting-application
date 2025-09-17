@@ -166,6 +166,45 @@ function calculateBDT() {
     document.getElementById('bdt_amount').value = bdtAmount.toFixed(2);
     // Update main amount field
     document.getElementById('amount').value = bdtAmount.toFixed(2);
+    
+    // Check dollar balance
+    checkDollarBalance(usdAmount);
+}
+
+function checkDollarBalance(requestedAmount) {
+    if (requestedAmount <= 0) return;
+    
+    fetch('/api/dollar-balance')
+        .then(response => response.json())
+        .then(data => {
+            const balanceInfo = document.getElementById('balance-info');
+            const submitButton = document.querySelector('button[type="submit"]');
+            
+            if (!balanceInfo) {
+                // Create balance info element if it doesn't exist
+                const balanceDiv = document.createElement('div');
+                balanceDiv.id = 'balance-info';
+                balanceDiv.className = 'mt-2 text-sm';
+                document.getElementById('usd_amount').parentNode.appendChild(balanceDiv);
+            }
+            
+            const balanceElement = document.getElementById('balance-info');
+            
+            if (requestedAmount > data.balance) {
+                balanceElement.innerHTML = `<span class="text-red-600 font-medium">⚠️ Insufficient balance! Available: $${data.formatted_balance}</span>`;
+                balanceElement.className = 'mt-2 text-sm text-red-600';
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                balanceElement.innerHTML = `<span class="text-green-600">✓ Available balance: $${data.formatted_balance}</span>`;
+                balanceElement.className = 'mt-2 text-sm text-green-600';
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        })
+        .catch(error => {
+            console.error('Error checking balance:', error);
+        });
 }
 
 // Initialize on page load

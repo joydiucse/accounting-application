@@ -172,6 +172,30 @@ function calculateBDT() {
     document.getElementById('bdt_amount').value = bdtAmount.toFixed(2);
     // Update main amount field
     document.getElementById('amount').value = bdtAmount.toFixed(2);
+    
+    // Show current balance for reference
+    showCurrentBalance();
+}
+
+function showCurrentBalance() {
+    fetch('/api/dollar-balance')
+        .then(response => response.json())
+        .then(data => {
+            const balanceInfo = document.getElementById('balance-info');
+            
+            if (!balanceInfo) {
+                const balanceDiv = document.createElement('div');
+                balanceDiv.id = 'balance-info';
+                balanceDiv.className = 'mt-2 text-sm text-blue-600';
+                document.getElementById('usd_amount').parentNode.appendChild(balanceDiv);
+            }
+            
+            const balanceElement = document.getElementById('balance-info');
+            balanceElement.innerHTML = `<span class="text-blue-600">💰 Current dollar balance: $${data.formatted_balance}</span>`;
+        })
+        .catch(error => {
+            console.error('Error fetching balance:', error);
+        });
 }
 
 // Initialize on page load
