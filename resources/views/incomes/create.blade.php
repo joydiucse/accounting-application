@@ -42,10 +42,54 @@
 
                         <!-- From Dollar -->
                         <div class="flex items-center">
-                            <input type="checkbox" name="from_dollar" id="from_dollar" value="1" {{ old('from_dollar') ? 'checked' : '' }} class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                            <input type="checkbox" name="from_dollar" id="from_dollar" value="1" {{ old('from_dollar') ? 'checked' : '' }} class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" onchange="toggleDollarFields()">
                             <label for="from_dollar" class="ml-2 block text-sm text-gray-700">
                                 Income from Dollar Source
                             </label>
+                        </div>
+
+                        <!-- Dollar Fields (Hidden by default) -->
+                        <div id="dollar-fields" class="md:col-span-2 {{ old('from_dollar') ? '' : 'hidden' }}">
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <h4 class="text-sm font-medium text-blue-800 mb-3">Dollar Transaction Details</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <!-- USD Amount -->
+                                    <div>
+                                        <label for="usd_amount" class="block text-sm font-medium text-gray-700">USD Amount *</label>
+                                        <div class="mt-1 relative rounded-md shadow-sm">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <span class="text-gray-500 sm:text-sm">$</span>
+                                            </div>
+                                            <input type="number" name="usd_amount" id="usd_amount" step="0.01" min="0" value="{{ old('usd_amount') }}" class="pl-7 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="0.00" oninput="calculateBDT()">
+                                        </div>
+                                        @error('usd_amount')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Exchange Rate -->
+                                    <div>
+                                        <label for="exchange_rate" class="block text-sm font-medium text-gray-700">Exchange Rate (USD to BDT) *</label>
+                                        <input type="number" name="exchange_rate" id="exchange_rate" step="0.0001" min="0" value="{{ old('exchange_rate', '110.00') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="110.00" oninput="calculateBDT()">
+                                        @error('exchange_rate')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- BDT Amount (Calculated) -->
+                                    <div>
+                                        <label for="bdt_amount_display" class="block text-sm font-medium text-gray-700">BDT Amount (Calculated)</label>
+                                        <div class="mt-1 relative rounded-md shadow-sm">
+                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <span class="text-gray-500 sm:text-sm">৳</span>
+                                            </div>
+                                            <input type="text" id="bdt_amount_display" class="pl-7 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm" placeholder="0.00" readonly>
+                                        </div>
+                                        <input type="hidden" name="bdt_amount" id="bdt_amount" value="{{ old('bdt_amount') }}">
+                                    </div>
+                                </div>
+                                <p class="text-xs text-blue-600 mt-2">Note: The BDT amount will be automatically calculated and used as the main amount for this income.</p>
+                            </div>
                         </div>
 
                         <!-- Source -->
@@ -95,4 +139,41 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleDollarFields() {
+            const checkbox = document.getElementById('from_dollar');
+            const dollarFields = document.getElementById('dollar-fields');
+            const amountField = document.getElementById('amount');
+            
+            if (checkbox.checked) {
+                dollarFields.classList.remove('hidden');
+                amountField.setAttribute('readonly', true);
+                amountField.classList.add('bg-gray-50');
+                calculateBDT();
+            } else {
+                dollarFields.classList.add('hidden');
+                amountField.removeAttribute('readonly');
+                amountField.classList.remove('bg-gray-50');
+                amountField.value = '';
+            }
+        }
+        
+        function calculateBDT() {
+            const usdAmount = parseFloat(document.getElementById('usd_amount').value) || 0;
+            const exchangeRate = parseFloat(document.getElementById('exchange_rate').value) || 0;
+            const bdtAmount = usdAmount * exchangeRate;
+            
+            document.getElementById('bdt_amount_display').value = bdtAmount.toFixed(2);
+            document.getElementById('bdt_amount').value = bdtAmount.toFixed(2);
+            document.getElementById('amount').value = bdtAmount.toFixed(2);
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('from_dollar').checked) {
+                toggleDollarFields();
+            }
+        });
+    </script>
 </x-app-layout>
