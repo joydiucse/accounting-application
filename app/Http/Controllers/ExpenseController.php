@@ -67,7 +67,7 @@ class ExpenseController extends Controller
         // Handle dollar source expenses
         if ($request->boolean('from_dollar')) {
             $usdAmount = $request->usd_amount;
-            $availableBalance = \App\Models\Income::getAvailableDollarBalance(auth()->id());
+            $availableBalance = \App\Models\Income::getAvailableDollarBalance();
             
             if ($usdAmount > $availableBalance) {
                 return redirect()->back()
@@ -124,7 +124,7 @@ class ExpenseController extends Controller
         // Handle dollar source expenses
         if ($request->boolean('from_dollar')) {
             $usdAmount = $request->usd_amount;
-            $availableBalance = \App\Models\Income::getAvailableDollarBalance(auth()->id());
+            $availableBalance = \App\Models\Income::getAvailableDollarBalance();
             
             // Add back the current expense's USD amount if it was from dollar source
             if ($expense->from_dollar) {

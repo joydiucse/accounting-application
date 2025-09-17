@@ -73,17 +73,13 @@ class Income extends Model
     /**
      * Calculate available dollar balance for a user
      */
-    public static function getAvailableDollarBalance($userId)
+    public static function getAvailableDollarBalance()
     {
-        // Get total USD income from dollar sources
-        $totalDollarIncome = self::where('user_id', $userId)
-            ->where('from_dollar', true)
-            ->sum('usd_amount');
+        // Get total USD income from DollarIncome table
+        $totalDollarIncome = \App\Models\DollarIncome::sum('amount');
 
-        // Get total USD expenses from dollar sources
-        $totalDollarExpenses = \App\Models\Expense::where('user_id', $userId)
-            ->where('from_dollar', true)
-            ->sum('usd_amount');
+        // Get total USD expenses from DollarExpense table
+        $totalDollarExpenses = \App\Models\DollarExpense::sum('amount');
 
         return $totalDollarIncome - $totalDollarExpenses;
     }

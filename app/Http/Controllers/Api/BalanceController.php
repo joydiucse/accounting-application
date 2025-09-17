@@ -13,7 +13,7 @@ class BalanceController extends Controller
      */
     public function getDollarBalance()
     {
-        $balance = Income::getAvailableDollarBalance(auth()->id());
+        $balance = Income::getAvailableDollarBalance();
         
         return response()->json([
             'balance' => $balance,

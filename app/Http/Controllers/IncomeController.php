@@ -66,6 +66,14 @@ class IncomeController extends Controller
 
         // Handle dollar source incomes
         if ($request->boolean('from_dollar')) {
+            // Check if there's sufficient dollar balance
+            $availableBalance = \App\Models\Income::getAvailableDollarBalance();
+            if ($availableBalance < $request->usd_amount) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['usd_amount' => 'Insufficient dollar balance. Available: $' . number_format($availableBalance, 2)]);
+            }
+            
             $data['usd_amount'] = $request->usd_amount;
             $data['exchange_rate'] = $request->exchange_rate;
             $data['bdt_amount'] = $request->bdt_amount;
@@ -114,6 +122,17 @@ class IncomeController extends Controller
 
         // Handle dollar source incomes
         if ($request->boolean('from_dollar')) {
+            // Check if there's sufficient dollar balance (excluding current income if it was from dollar)
+            $availableBalance = \App\Models\Income::getAvailableDollarBalance();
+            if ($income->from_dollar && $income->usd_amount) {
+                $availableBalance += $income->usd_amount; // Add back current income amount
+            }
+            if ($availableBalance < $request->usd_amount) {
+                return redirect()->back()
+                    ->withInput()
+                    ->withErrors(['usd_amount' => 'Insufficient dollar balance. Available: $' . number_format($availableBalance, 2)]);
+            }
+            
             $data['usd_amount'] = $request->usd_amount;
             $data['exchange_rate'] = $request->exchange_rate;
             $data['bdt_amount'] = $request->bdt_amount;

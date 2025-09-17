@@ -191,7 +191,7 @@ function showCurrentBalance() {
             }
             
             const balanceElement = document.getElementById('balance-info');
-            balanceElement.innerHTML = `<span class="text-blue-600">💰 Current dollar balance: $${data.formatted_balance}</span>`;
+            balanceElement.innerHTML = `<span class="text-blue-600">Current dollar balance: $${data.formatted_balance}</span>`;
         })
         .catch(error => {
             console.error('Error fetching balance:', error);
