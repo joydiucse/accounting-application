@@ -88,8 +88,8 @@
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-500">Net Profit/Loss</p>
                             <p class="text-2xl font-semibold {{ $netProfit >= 0 ? 'text-blue-600' : 'text-orange-600' }}">
-                                ${{ number_format($netProfit, 2) }}
-                            </p>
+                    ৳{{ number_format($netProfit, 2) }}
+                </p>
                         </div>
                     </div>
                 </div>

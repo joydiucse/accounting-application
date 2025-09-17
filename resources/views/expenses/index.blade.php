@@ -79,7 +79,7 @@
                                         {{ $expense->category }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">
-                                        ${{ number_format($expense->amount, 2) }}
+                                        ৳{{ number_format($expense->amount, 2) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         @if($expense->from_dollar)
