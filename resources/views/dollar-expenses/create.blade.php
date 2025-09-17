@@ -44,7 +44,7 @@
                         <div>
                             <label for="exchange_rate" class="block text-sm font-medium text-gray-700">Exchange Rate (USD to BDT) *</label>
                             <div class="mt-1 relative rounded-md shadow-sm">
-                                <input type="number" name="exchange_rate" id="exchange_rate" step="0.0001" min="0" value="{{ old('exchange_rate', '110.0000') }}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 @error('exchange_rate') border-red-500 @enderror" placeholder="110.0000" oninput="calculateBDT()">
+                                <input type="number" name="exchange_rate" id="exchange_rate" step="0.0001" min="0" value="{{ old('exchange_rate', '0') }}" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500 @error('exchange_rate') border-red-500 @enderror" placeholder="110.0000" oninput="calculateBDT()">
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                     <span class="text-gray-500 sm:text-sm">BDT</span>
                                 </div>

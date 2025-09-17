@@ -86,7 +86,7 @@
                                         {{ number_format($expense->exchange_rate, 4) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
-                                        ৳{{ number_format($expense->bdt_amount, 2) }}
+                                        {{ $expense->bdt_amount > 0 ? '৳'. number_format($expense->bdt_amount, 2) : '-' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         {{ $expense->description ?? '-' }}
