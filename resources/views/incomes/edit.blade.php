@@ -46,6 +46,14 @@
                             @enderror
                         </div>
 
+                        <!-- From Dollar -->
+                        <div class="flex items-center">
+                            <input type="checkbox" name="from_dollar" id="from_dollar" value="1" {{ old('from_dollar', $income->from_dollar) ? 'checked' : '' }} class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                            <label for="from_dollar" class="ml-2 block text-sm text-gray-700">
+                                Income from Dollar Source
+                            </label>
+                        </div>
+
                         <!-- Source -->
                         <div class="md:col-span-2">
                             <label for="source" class="block text-sm font-medium text-gray-700">Source *</label>

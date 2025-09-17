@@ -62,6 +62,7 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source Type</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                                 @if(auth()->user()->canManage())
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -79,6 +80,17 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">
                                         ${{ number_format($expense->amount, 2) }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        @if($expense->from_dollar)
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                Dollar Source
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                Regular
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-500">
                                         {{ $expense->description ?? '-' }}
@@ -99,7 +111,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="{{ auth()->user()->canManage() ? '5' : '4' }}" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    <td colspan="{{ auth()->user()->canManage() ? '6' : '5' }}" class="px-6 py-4 text-center text-sm text-gray-500">
                                         No expense records found.
                                     </td>
                                 </tr>

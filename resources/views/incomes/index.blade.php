@@ -58,69 +58,81 @@
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                            @if(auth()->user()->canManage())
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                            @endif
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($incomes as $income)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $income->date->format('M d, Y') }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">
-                                    {{ $income->source }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $income->category->name ?? 'N/A' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
-                                    ${{ number_format($income->amount, 2) }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    {{ $income->description ?? '-' }}
-                                </td>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
                                 @if(auth()->user()->canManage())
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div class="flex space-x-2">
-                                            <a href="{{ route('incomes.show', $income) }}" class="text-blue-600 hover:text-blue-900">View</a>
-                                            <a href="{{ route('incomes.edit', $income) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                            <form action="{{ route('incomes.destroy', $income) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this income record?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 @endif
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="{{ auth()->user()->canManage() ? '6' : '5' }}" class="px-6 py-4 text-center text-sm text-gray-500">
-                                    No income records found.
-                                </td>
-                            </tr>
-                        @endforelse
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @forelse($incomes as $income)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $income->date->format('M d, Y') }}
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">
+                                        {{ $income->source }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ $income->category->name ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">
+                                         ${{ number_format($income->amount, 2) }}
+                                     </td>
+                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                         @if($income->from_dollar)
+                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                 Dollar Source
+                                             </span>
+                                         @else
+                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                 Regular
+                                             </span>
+                                         @endif
+                                     </td>
+                                     <td class="px-6 py-4 text-sm text-gray-500">
+                                         {{ $income->description ?? '-' }}
+                                     </td>
+                                    @if(auth()->user()->canManage())
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div class="flex space-x-2">
+                                                <a href="{{ route('incomes.show', $income) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                                <a href="{{ route('incomes.edit', $income) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                                <form action="{{ route('incomes.destroy', $income) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this income record?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @empty
+                                 <tr>
+                                     <td colspan="{{ auth()->user()->canManage() ? '7' : '6' }}" class="px-6 py-4 text-center text-sm text-gray-500">
+                                         No income records found.
+                                     </td>
+                                 </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
-
+                
                 <!-- Pagination -->
                 <div class="mt-4">
                     {{ $incomes->appends(request()->query())->links() }}
                 </div>
-
+                
                 <!-- Total Summary -->
                 <div class="mt-4 bg-gray-50 p-4 rounded-lg">
                     <div class="text-sm text-gray-600">
-                        Total Income: <span class="font-semibold text-green-600">${{ number_format($totalIncome, 2) }}</span>
+                        Total Income: <span class="font-semibold text-green-600">৳{{ number_format($totalIncome, 2) }}</span>
                         ({{ $incomes->total() }} records)
                     </div>
                 </div>

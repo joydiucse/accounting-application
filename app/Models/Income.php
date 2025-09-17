@@ -15,6 +15,7 @@ class Income extends Model
         'date',
         'source',
         'amount',
+        'from_dollar',
         'description',
         'user_id',
         'category_id',
