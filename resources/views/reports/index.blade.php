@@ -96,6 +96,62 @@
             </div>
         </div>
 
+        <!-- Dollar Statistics -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+            <div class="p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Dollar Transactions Summary</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Dollar Income -->
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-sm font-semibold text-green-800">Dollar Income</h4>
+                            <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xl font-bold text-green-900">${{ number_format($totalDollarIncomeUSD, 2) }}</p>
+    
+                        </div>
+                    </div>
+                    
+                    <!-- Dollar Expenses -->
+                    <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-lg p-4 border border-red-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-sm font-semibold text-red-800">Dollar Expenses</h4>
+                            <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xl font-bold text-red-900">${{ number_format($totalDollarExpensesUSD, 2) }}</p>
+                            <p class="text-sm text-red-700">৳{{ number_format($totalDollarExpensesBDT, 2) }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Dollar Net Profit -->
+                    <div class="bg-gradient-to-br {{ $dollarNetProfitUSD >= 0 ? 'from-blue-50 to-indigo-50' : 'from-orange-50 to-red-50' }} rounded-lg p-4 border {{ $dollarNetProfitUSD >= 0 ? 'border-blue-200' : 'border-orange-200' }}">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-sm font-semibold {{ $dollarNetProfitUSD >= 0 ? 'text-blue-800' : 'text-orange-800' }}">Dollar Net Profit</h4>
+                            <div class="w-8 h-8 {{ $dollarNetProfitUSD >= 0 ? 'bg-blue-500' : 'bg-orange-500' }} rounded-lg flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-xl font-bold {{ $dollarNetProfitUSD >= 0 ? 'text-blue-900' : 'text-orange-900' }}">${{ number_format($dollarNetProfitUSD, 2) }}</p>
+                            <p class="text-sm {{ $dollarNetProfitUSD >= 0 ? 'text-blue-700' : 'text-orange-700' }}">৳{{ number_format($dollarNetProfitBDT, 2) }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Charts -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">

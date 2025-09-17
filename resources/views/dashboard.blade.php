@@ -102,6 +102,69 @@
             </div>
         </div>
 
+        <!-- Dollar Statistics Section -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">Dollar Transactions</h3>
+                    <p class="text-sm text-slate-600">USD income and expenses overview</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">USD</span>
+                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">BDT</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dollar Income Card -->
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-sm font-semibold text-green-800">Dollar Income</h4>
+                        <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-xl font-bold text-green-900">${{ number_format($totalDollarIncomeUSD, 2) }}</p>
+                    </div>
+                </div>
+                
+                <!-- Dollar Expenses Card -->
+                <div class="bg-gradient-to-br from-red-50 to-pink-50 rounded-xl p-4 border border-red-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-sm font-semibold text-red-800">Dollar Expenses</h4>
+                        <div class="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-xl font-bold text-red-900">${{ number_format($totalDollarExpensesUSD, 2) }}</p>
+                        <p class="text-sm text-red-700">৳{{ number_format($totalDollarExpensesBDT, 2) }}</p>
+                    </div>
+                </div>
+                
+                <!-- Dollar Balance Card -->
+                <div class="bg-gradient-to-br {{ $dollarBalanceUSD >= 0 ? 'from-blue-50 to-indigo-50' : 'from-orange-50 to-red-50' }} rounded-xl p-4 border {{ $dollarBalanceUSD >= 0 ? 'border-blue-200' : 'border-orange-200' }}">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-sm font-semibold {{ $dollarBalanceUSD >= 0 ? 'text-blue-800' : 'text-orange-800' }}">Dollar Balance</h4>
+                        <div class="w-8 h-8 {{ $dollarBalanceUSD >= 0 ? 'bg-blue-500' : 'bg-orange-500' }} rounded-lg flex items-center justify-center">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-xl font-bold {{ $dollarBalanceUSD >= 0 ? 'text-blue-900' : 'text-orange-900' }}">${{ number_format($dollarBalanceUSD, 2) }}</p>
+                        <p class="text-sm {{ $dollarBalanceUSD >= 0 ? 'text-blue-700' : 'text-orange-700' }}">৳{{ number_format($dollarBalanceBDT, 2) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Charts and Summary Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Revenue Chart -->
@@ -223,6 +286,81 @@
                 </div>
             </div>
         </div>
+
+        <!-- Recent Dollar Transactions -->
+        @if($recentDollarIncomes->count() > 0 || $recentDollarExpenses->count() > 0)
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200">
+            <div class="p-6 border-b border-slate-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Recent Dollar Transactions</h3>
+                        <p class="text-sm text-slate-600">Latest USD income and expenses</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="{{ route('dollar-incomes.index') }}" class="text-sm text-green-600 hover:text-green-700 font-medium">Income</a>
+                        <span class="text-slate-400">|</span>
+                        <a href="{{ route('dollar-expenses.index') }}" class="text-sm text-red-600 hover:text-red-700 font-medium">Expenses</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Dollar Incomes -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-green-800 mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Dollar Income
+                        </h4>
+                        <div class="space-y-3">
+                            @forelse($recentDollarIncomes as $income)
+                                <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                                    <div>
+                                        <p class="font-medium text-green-900 text-sm">{{ $income->source }}</p>
+                                        <p class="text-xs text-green-700">{{ $income->category->name ?? 'Income' }} • {{ $income->date->format('M d, Y') }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-green-800 text-sm">${{ number_format($income->amount, 2) }}</p>
+                                        <p class="text-xs text-green-600">৳{{ number_format($income->bdt_amount, 2) }}</p>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-sm text-slate-500 text-center py-4">No recent dollar income</p>
+                            @endforelse
+                        </div>
+                    </div>
+
+                    <!-- Recent Dollar Expenses -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-red-800 mb-3 flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                            </svg>
+                            Dollar Expenses
+                        </h4>
+                        <div class="space-y-3">
+                            @forelse($recentDollarExpenses as $expense)
+                                <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                                    <div>
+                                        <p class="font-medium text-red-900 text-sm">{{ $expense->description ?? 'Expense' }}</p>
+                                        <p class="text-xs text-red-700">{{ $expense->category->name ?? 'Expense' }} • {{ $expense->date->format('M d, Y') }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-red-800 text-sm">${{ number_format($expense->amount, 2) }}</p>
+                                        <p class="text-xs text-red-600">৳{{ number_format($expense->bdt_amount, 2) }}</p>
+                                    </div>
+                                </div>
+                            @empty
+                                <p class="text-sm text-slate-500 text-center py-4">No recent dollar expenses</p>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Enhanced Chart.js Scripts -->

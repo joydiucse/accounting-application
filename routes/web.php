@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\DollarIncomeController;
+use App\Http\Controllers\DollarExpenseController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CompanyProfileController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +30,8 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin,accountant')->group(function () {
         Route::resource('incomes', IncomeController::class);
         Route::resource('expenses', ExpenseController::class);
+        Route::resource('dollar-incomes', DollarIncomeController::class);
+        Route::resource('dollar-expenses', DollarExpenseController::class);
     });
     
     // Category routes - admin only

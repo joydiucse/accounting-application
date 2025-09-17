@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Income;
 use App\Models\Expense;
+use App\Models\DollarIncome;
+use App\Models\DollarExpense;
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,6 +24,14 @@ class DashboardController extends Controller
         $totalIncome = Income::sum('amount');
         $totalExpenses = Expense::sum('amount');
         $currentBalance = $totalIncome - $totalExpenses;
+        
+        // Calculate dollar totals
+        $totalDollarIncomeUSD = DollarIncome::sum('amount');
+
+        $totalDollarExpensesUSD = DollarExpense::sum('amount');
+        $totalDollarExpensesBDT = DollarExpense::sum('bdt_amount');
+        $dollarBalanceUSD = $totalDollarIncomeUSD - $totalDollarExpensesUSD;
+        $dollarBalanceBDT = 0; // BDT calculations removed for dollar income
         
         // Monthly data for current year
         $monthlyIncome = Income::selectRaw('MONTH(date) as month, SUM(amount) as total')
@@ -53,14 +63,32 @@ class DashboardController extends Controller
             ->latest('date')
             ->take(5)
             ->get();
+            
+        $recentDollarIncomes = DollarIncome::with(['user', 'category'])
+            ->latest('date')
+            ->take(3)
+            ->get();
+            
+        $recentDollarExpenses = DollarExpense::with(['user', 'category'])
+            ->latest('date')
+            ->take(3)
+            ->get();
         
         return view('dashboard', compact(
             'totalIncome',
             'totalExpenses', 
             'currentBalance',
+            'totalDollarIncomeUSD',
+
+            'totalDollarExpensesUSD',
+            'totalDollarExpensesBDT',
+            'dollarBalanceUSD',
+            'dollarBalanceBDT',
             'chartData',
             'recentIncomes',
-            'recentExpenses'
+            'recentExpenses',
+            'recentDollarIncomes',
+            'recentDollarExpenses'
         ));
     }
     
@@ -77,11 +105,28 @@ class DashboardController extends Controller
         $expenses = Expense::with(['user', 'category'])
             ->whereBetween('date', [$dateFrom, $dateTo])
             ->get();
+            
+        // Get filtered dollar data
+        $dollarIncomes = DollarIncome::with(['user', 'category'])
+            ->whereBetween('date', [$dateFrom, $dateTo])
+            ->get();
+            
+        $dollarExpenses = DollarExpense::with(['user', 'category'])
+            ->whereBetween('date', [$dateFrom, $dateTo])
+            ->get();
         
         // Calculate totals
         $totalIncome = $incomes->sum('amount');
         $totalExpenses = $expenses->sum('amount');
         $netProfit = $totalIncome - $totalExpenses;
+        
+        // Calculate dollar totals
+        $totalDollarIncomeUSD = $dollarIncomes->sum('amount');
+        $totalDollarIncomeBDT = 0; // BDT calculations removed for dollar income
+        $totalDollarExpensesUSD = $dollarExpenses->sum('amount');
+        $totalDollarExpensesBDT = $dollarExpenses->sum('bdt_amount');
+        $dollarNetProfitUSD = $totalDollarIncomeUSD - $totalDollarExpensesUSD;
+        $dollarNetProfitBDT = 0 - $totalDollarExpensesBDT; // BDT calculations removed for dollar income
         
         // Group by categories
         $incomeByCategory = $incomes->groupBy('category.name')
@@ -97,6 +142,27 @@ class DashboardController extends Controller
             ->map(function ($items) {
                 return [
                     'total' => $items->sum('amount'),
+                    'count' => $items->count(),
+                    'items' => $items
+                ];
+            });
+            
+        // Group dollar transactions by categories
+        $dollarIncomeByCategory = $dollarIncomes->groupBy('category.name')
+            ->map(function ($items) {
+                return [
+                    'total_usd' => $items->sum('amount'),
+                    'total_bdt' => 0, // BDT calculations removed for dollar income
+                    'count' => $items->count(),
+                    'items' => $items
+                ];
+            });
+            
+        $dollarExpenseByCategory = $dollarExpenses->groupBy('category.name')
+            ->map(function ($items) {
+                return [
+                    'total_usd' => $items->sum('amount'),
+                    'total_bdt' => $items->sum('bdt_amount'),
                     'count' => $items->count(),
                     'items' => $items
                 ];
@@ -117,11 +183,22 @@ class DashboardController extends Controller
             $monthlyIncome = $incomes->whereBetween('date', [$monthStart, $monthEnd])->sum('amount');
             $monthlyExpenses = $expenses->whereBetween('date', [$monthStart, $monthEnd])->sum('amount');
             
+            $monthlyDollarIncomeUSD = $dollarIncomes->whereBetween('date', [$monthStart, $monthEnd])->sum('amount');
+            $monthlyDollarIncomeBDT = 0; // BDT calculations removed for dollar income
+            $monthlyDollarExpensesUSD = $dollarExpenses->whereBetween('date', [$monthStart, $monthEnd])->sum('amount');
+            $monthlyDollarExpensesBDT = $dollarExpenses->whereBetween('date', [$monthStart, $monthEnd])->sum('bdt_amount');
+            
             $monthlyData[] = [
                 'month' => $period->format('M Y'),
                 'income' => $monthlyIncome,
                 'expenses' => $monthlyExpenses,
-                'profit' => $monthlyIncome - $monthlyExpenses
+                'profit' => $monthlyIncome - $monthlyExpenses,
+                'dollar_income_usd' => $monthlyDollarIncomeUSD,
+                'dollar_income_bdt' => $monthlyDollarIncomeBDT,
+                'dollar_expenses_usd' => $monthlyDollarExpensesUSD,
+                'dollar_expenses_bdt' => $monthlyDollarExpensesBDT,
+                'dollar_profit_usd' => $monthlyDollarIncomeUSD - $monthlyDollarExpensesUSD,
+                'dollar_profit_bdt' => $monthlyDollarIncomeBDT - $monthlyDollarExpensesBDT
             ];
             
             // Prepare chart data
@@ -139,11 +216,21 @@ class DashboardController extends Controller
         return view('reports.index', compact(
             'incomes',
             'expenses',
+            'dollarIncomes',
+            'dollarExpenses',
             'totalIncome',
             'totalExpenses',
             'netProfit',
+            'totalDollarIncomeUSD',
+
+            'totalDollarExpensesUSD',
+            'totalDollarExpensesBDT',
+            'dollarNetProfitUSD',
+            'dollarNetProfitBDT',
             'incomeByCategory',
             'expenseByCategory',
+            'dollarIncomeByCategory',
+            'dollarExpenseByCategory',
             'monthlyData',
             'dateFrom',
             'dateTo',
